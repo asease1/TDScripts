@@ -7,8 +7,12 @@ public class BuildManager : MonoBehaviour {
     public enum ModualTypes { Damage, AttackRate, DebuffDuration, ProjectileSpeed, Range, ArmorReduction, Curse, Dot, EnergyLeech, HpRegenReduction, Slow, Splash}
 
     public GameObject[] Buildings;
-    public GameObject[] Gun;
-    public GameObject[] GunBase;
+    public GameObject gunModual1;
+    public GameObject gunModual2;
+    public GameObject gunModual3;
+    public GameObject gunModualS1;
+    public GameObject gunModualS2;
+    public GameObject gunModualS3;
     [Tooltip("1  = Damage\n2  = AttackRate\n3  = DebuffDuration\n4  = ProjectileSpeed\n5  = Range\n6  = ArmorReduction\n7  = Curse\n8  = Dot\n9  = EnergyLeech\n10 = HpRegenReduction\n11 = Slow\n12 = Splash")]
     public Sprite[] modualsIcon;
     public Sprite[] weaponModualsIcon;
@@ -123,11 +127,18 @@ public class BuildManager : MonoBehaviour {
 
     public void CraftWeaponModual(int weapon)
     {
-        WeaponModual newWeaponModual = new WeaponModual(weaponModualsIcon[weapon]);
+        WeaponModual newWeaponModual = new WeaponModual(weaponModualsIcon[weapon-1]);
+        newWeaponModual.attackRate = 1;
         switch (weapon)
         {
             case 1:
-                //some code to specialse weapon
+                newWeaponModual.damageType = BaseBullet.damageTypes.light;
+                break;
+            case 2:
+                newWeaponModual.damageType = BaseBullet.damageTypes.medium;
+                break;
+            case 3:
+                newWeaponModual.damageType = BaseBullet.damageTypes.heavy;
                 break;
         }
         InventoryManager.Instance.AddInventory(newWeaponModual);

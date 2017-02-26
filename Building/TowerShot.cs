@@ -16,17 +16,23 @@ public class TowerShot : MonoBehaviour {
     private Queue<BaseBullet> InActive = new Queue<BaseBullet>();
     private UpgradeStats myStats;
     private float lastRun = 0;
+    private GameObject currentWeaponModual;
+    private BaseBullet.damageTypes weaponType1 = BaseBullet.damageTypes.none, weaponType2 = BaseBullet.damageTypes.none;
 
     // Use this for initialization
     void Start () {
         GetTargets = GetComponent<GetTargetTower>();
         myStats = GetComponent<TowerUpgrade>().myStats;
+        GetComponent<TowerUpgrade>().ChangeWeaponModual.AddListener(UpdateWeaponModual);
         StartCoroutine("GetTarget", getTargetDelay);
         attackType = AttackType.Homing;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (currentWeaponModual == null)
+            return;
+
         if (currentTarget != null)
         {
             gun.transform.LookAt(currentTarget.transform);
@@ -99,6 +105,47 @@ public class TowerShot : MonoBehaviour {
                 elm.target = currentTarget.transform;
             }
         }
+    }
+
+    private void UpdateWeaponModual(UpgradeModual[] moduals)
+    {
+        if (moduals[0] != null && moduals[0].GetType() == typeof(WeaponModual))
+            weaponType1 = ((WeaponModual)moduals[0]).damageType;
+        else
+            weaponType1 = BaseBullet.damageTypes.none;
+        if (moduals[1] != null && moduals[1].GetType() == typeof(WeaponModual))
+            weaponType2 = ((WeaponModual)moduals[1]).damageType;
+        else
+            weaponType2 = BaseBullet.damageTypes.none;
+        BaseBullet.damageTypes damageType = BaseBullet.GetDamageType(weaponType1, weaponType2);
+        Destroy(currentWeaponModual);
+        switch (damageType)
+        {
+            case BaseBullet.damageTypes.light:
+                currentWeaponModual = Instantiate(BuildManager.instance.gunModual1);
+                break;
+            case BaseBullet.damageTypes.medium:
+                currentWeaponModual = Instantiate(BuildManager.instance.gunModual2);
+                break;
+            case BaseBullet.damageTypes.heavy:
+                currentWeaponModual = Instantiate(BuildManager.instance.gunModual2);              
+                break;
+            case BaseBullet.damageTypes.special1:
+                currentWeaponModual = Instantiate(BuildManager.instance.gunModualS1);
+                break;
+            case BaseBullet.damageTypes.special2:
+                currentWeaponModual = Instantiate(BuildManager.instance.gunModualS2);
+                break;
+            case BaseBullet.damageTypes.special3:
+                currentWeaponModual = Instantiate(BuildManager.instance.gunModualS3);
+                break;
+            default:
+                return;
+        }
+        currentWeaponModual.transform.position = gun.transform.position;
+        currentWeaponModual.transform.parent = gun.transform;
+        currentWeaponModual.transform.rotation = gun.transform.parent.rotation;
+
     }
 
     IEnumerator GetTarget(float delay)

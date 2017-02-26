@@ -5,14 +5,14 @@ using System.Collections;
 
 public class MyUpgradeModualEvent : UnityEvent<UpgradeStats> { }
 
-public class voidEvent : UnityEvent { }
+public class ModualsEvent : UnityEvent<UpgradeModual[]> { }
 
 public class TowerUpgrade : MonoBehaviour
 {
     public UpgradeModual[] Moduals;
     public MyUpgradeModualEvent UpgradeUpdateEvent;
     public UpgradeStats myStats = new UpgradeStats();
-    public voidEvent ChangeWeaponModual;
+    public ModualsEvent ChangeWeaponModual;
 
 
     public int MaxModualAmount;
@@ -28,7 +28,7 @@ public class TowerUpgrade : MonoBehaviour
         if (UpgradeUpdateEvent == null)
             UpgradeUpdateEvent = new MyUpgradeModualEvent();
         if (ChangeWeaponModual == null)
-            ChangeWeaponModual = new voidEvent();
+            ChangeWeaponModual = new ModualsEvent();
     }
 
     void Start()
@@ -54,7 +54,7 @@ public class TowerUpgrade : MonoBehaviour
                 Moduals[equipWeaponModuals] = modual;
             equipWeaponModuals++;
             UpdateTowerStats();
-            ChangeWeaponModual.Invoke();
+            ChangeWeaponModual.Invoke(Moduals);
             return true;
         }
         else
@@ -99,7 +99,7 @@ public class TowerUpgrade : MonoBehaviour
         UpgradeModual tempUpgrade = Moduals[index];
         if(newModual.GetType() == typeof(WeaponModual))
         {
-            ChangeWeaponModual.Invoke();
+            ChangeWeaponModual.Invoke(Moduals);
             switch (index)
             {
                 case 0:
@@ -130,7 +130,7 @@ public class TowerUpgrade : MonoBehaviour
                     {
                         equipWeaponModuals--;
                         equipUpgradeModuals++;
-                        ChangeWeaponModual.Invoke();
+                        ChangeWeaponModual.Invoke(Moduals);
                     }
                     UpdateTowerStats();
                     return tempUpgrade;

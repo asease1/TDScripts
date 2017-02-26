@@ -24,9 +24,13 @@ public class GetTargetTower : MonoBehaviour {
     void Awake() {
         collider = GetComponent<CapsuleCollider>();
         towerShot = GetComponent<TowerShot>();
-        GetComponent<TowerUpgrade>().UpgradeUpdateEvent.AddListener(UpdateRange);
+        
     }
 
+    void Start()
+    {
+        GetComponent<TowerUpgrade>().UpgradeUpdateEvent.AddListener(UpdateRange);
+    }
 
     public void KillTarget(EnemyStats target)
     {
