@@ -7,7 +7,7 @@ public class Spawn : MonoBehaviour {
 
 
     //To spawn the first wave istent
-    public float waveTimer = 500;
+    private float waveTimer = 500;
     public float waveSpeed = 1;
     private float spawnTimer = 0;
     private float lastSpawn = 0;
@@ -35,15 +35,17 @@ public class Spawn : MonoBehaviour {
             return count - spawnCount;
         }
     }
+
+    public float WaveTimer { get { return waveTimer; } }
    
     private void Awake()
     {
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 30, null));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 25, null));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 20, null));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 15, null));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 10, null));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 5, null));
+        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 30, new List<MonsterStone.MonsterAbility>()));
+        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 25, new List<MonsterStone.MonsterAbility>()));
+        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 20, new List<MonsterStone.MonsterAbility>()));
+        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 15, new List<MonsterStone.MonsterAbility>()));
+        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 10, new List<MonsterStone.MonsterAbility>()));
+        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 5, new List<MonsterStone.MonsterAbility>()));
 
         if (newWave == null)
             newWave = new UnityEvent();

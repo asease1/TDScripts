@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MonsterStone {
     public enum MonsterType { Slime, Harpy}
@@ -19,11 +21,10 @@ public class MonsterStone {
         this.abilitys = abilitys;
         this.maxTime = maxTime;
 
-        if(enemies == null)
+        if (enemies == null)
         {
             enemies = new List<GameObject>();
             enemies.Add((GameObject)Resources.Load("Prefab/Enemy", typeof(GameObject)));
-            Debug.Log(enemies[0]);
         }
 
     }
@@ -59,9 +60,22 @@ public class MonsterStone {
         switch (type)
         {
             default:
-                Object.Instantiate(enemies[0], position, Quaternion.identity);
+                UnityEngine.Object.Instantiate(enemies[0], position, Quaternion.identity);
                 break;
 
         }
+    }
+
+    //TODO implement
+    internal Sprite getTypeImage()
+    {
+
+        return null;
+    }
+
+    //TODO implement
+    internal Image getAblityImage(int i)
+    {
+        return null;
     }
 }
