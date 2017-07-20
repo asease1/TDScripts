@@ -6,43 +6,36 @@ using System.Collections;
 public class ResourceManager : MonoBehaviour {
 
     private int level = 1;
-    int resources;
-    int resourceCap;
-    float CapIncrese;
-    [SerializeField]
-    private int baseResourceCap = 500;
-    [SerializeField]
-    private float baseIntrest = 1.05f;
-    public IntEvent ResourceUpdateEvent;
+    private int resources;
+    public UnityEvent emptyResource;
+    public static ResourceManager instance;
 
-    public int ResourceCap { get { return (int)Mathf.Pow(baseResourceCap, level); } }
+    public float getResourceMulti { get { return 1; } }
+    public int Resources { get { return resources; } }
 
     // Use this for initialization
     void Start () {
-        if (ResourceUpdateEvent == null)
-            ResourceUpdateEvent = new IntEvent();
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate()
-    {
-        ResourceUpdateEvent.Invoke(resources);
+        if (emptyResource == null)
+            emptyResource = new UnityEvent();
+        if (instance == null)
+            instance = this;
+        resources = 50;
 	}
 
-    public void CallIntrest()
+    public bool addResources(int amount)
     {
-        resources = (int)((float)resources * baseIntrest);
+        resources += Mathf.FloorToInt(amount * getResourceMulti);
+        return true;
     }
 
-    public void IncresseResources(int amount)
+    public bool subResources(int amount)
     {
-        resources += amount;
-        if (resources > ResourceCap)
-            level++;
-    }
-
-    public int GetResources()
-    {
-        return resources;
+        resources -= amount;
+        if(resources < 0)
+        {
+            emptyResource.Invoke();
+            return false;
+        }
+        return true;
     }
 }
