@@ -6,19 +6,22 @@ using System.Collections;
 public class ResourceManager : MonoBehaviour {
 
     private int level = 1;
-    private int resources;
+    private int resources = 0;
     public UnityEvent emptyResource;
     public static ResourceManager instance;
 
     public float getResourceMulti { get { return 1; } }
     public int Resources { get { return resources; } }
 
-    // Use this for initialization
-    void Start () {
+    private void Awake()
+    {
         if (emptyResource == null)
             emptyResource = new UnityEvent();
         if (instance == null)
             instance = this;
+    }
+    void Start () {
+        
         resources = 50;
 	}
 

@@ -1,23 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
+[SerializeField]
+public class  MonsterEvent : UnityEvent<MonsterStone> { }
+
 public class Spawn : MonoBehaviour {
 
-
+    public UnityEngine.Object spawnFile;
     //To spawn the first wave istent
+    private int waveCount = 0;
     private float waveTimer = 500;
     public float waveSpeed = 1;
     private float spawnTimer = 0;
     private float lastSpawn = 0;
     [Range(0, 2)]
     public float spawnDelay;
+    private int targetWave = -1;
 
     public Transform[] spawnPoints;
     public Transform targetPoint;
 
-    public UnityEvent newWave;
+    public MonsterEvent newWave;
 
     public List<MonsterStone> spawnQueue = new List<MonsterStone>();
     public List<MonsterStone> callQueue = new List<MonsterStone>();
@@ -36,19 +43,16 @@ public class Spawn : MonoBehaviour {
         }
     }
 
+    public int WaveCount { get { return waveCount; } }
+
     public float WaveTimer { get { return waveTimer; } }
    
     private void Awake()
     {
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 30, new List<MonsterStone.MonsterAbility>()));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 25, new List<MonsterStone.MonsterAbility>()));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 20, new List<MonsterStone.MonsterAbility>()));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 15, new List<MonsterStone.MonsterAbility>()));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Harpy, 10, new List<MonsterStone.MonsterAbility>()));
-        spawnQueue.Add(new MonsterStone(MonsterStone.MonsterType.Slime, 5, new List<MonsterStone.MonsterAbility>()));
+        
 
         if (newWave == null)
-            newWave = new UnityEvent();
+            newWave = new MonsterEvent();
 
         if (instance == null)
             instance = this;
@@ -56,8 +60,11 @@ public class Spawn : MonoBehaviour {
 
     private void Start()
     {
+        spawnQueue = XmlConverter.convertXmlToMonsterStone(AssetDatabase.GetAssetPath(spawnFile));
         foreach (Transform elm in spawnPoints)
             PathRequestManager.Instance.pathFinding.CreatePath(elm.position, targetPoint.position);
+
+        //List<MonsterStone> resualt = XmlConverter.convertXmlToMonsterStone(AssetDatabase.GetAssetPath(spawnFile));      
     }
 
     private void Update()
@@ -68,9 +75,17 @@ public class Spawn : MonoBehaviour {
         if(spawnQueue.Count > 0 && spawnQueue[0].maxTime < waveTimer)
         {
             callQueue.Add(spawnQueue[0]);
+            MonsterStone temp = spawnQueue[0];
             spawnQueue.RemoveAt(0);
             waveTimer = 0;
-            newWave.Invoke();
+            waveCount++;
+            newWave.Invoke(temp);
+            if (targetWave == 0)
+                waveSpeed = 1;
+                
+            
+
+            targetWave--;
         }
 
         if(spawnTimer > lastSpawn + spawnDelay)
@@ -99,5 +114,11 @@ public class Spawn : MonoBehaviour {
             }
                 
         }
+    }
+
+    internal void quickCallWave(int temp)
+    {
+        targetWave = temp;
+        waveSpeed = 10;
     }
 }
