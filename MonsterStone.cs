@@ -25,7 +25,7 @@ public class MonsterStone {
         if (enemies == null)
         {
             enemies = new List<GameObject>();
-            enemies.Add((GameObject)Resources.Load("Prefab/Enemy", typeof(GameObject)));
+            enemies.Add((GameObject)Resources.Load("Prefab/enemies/crystalmob_01_enemy", typeof(GameObject)));
         }
         if (abiltityMaterials == null)
         {
