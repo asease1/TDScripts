@@ -17,6 +17,8 @@ public class UpgradeModual {
     public UpgradeModual(Sprite Icon)
     {
         mySprite = Icon;
+        range = 5;
+        attackRate = 0.1f;
     }
 
     public UpgradeStats GetUpgradeStats()

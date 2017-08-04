@@ -6,7 +6,6 @@ public class GetTargetTower : MonoBehaviour {
 
     public enum TargetType { Closed, Fadest, HighstHealth, LowestHealth}
 
-    [SerializeField]
     private CapsuleCollider collider;
     private List<EnemyStats> targets = new List<EnemyStats>();
     private TowerShot towerShot;

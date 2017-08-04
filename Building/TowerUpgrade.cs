@@ -11,12 +11,12 @@ public class TowerUpgrade : MonoBehaviour
 {
     public UpgradeModual[] Moduals;
     public MyUpgradeModualEvent UpgradeUpdateEvent;
-    public UpgradeStats myStats = new UpgradeStats();
+    public UpgradeStats myStats;
     public ModualsEvent ChangeWeaponModual;
 
 
     public int MaxModualAmount;
-    public int equipWeaponModuals, equipUpgradeModuals;
+    private int equipWeaponModuals, equipUpgradeModuals;
 
     public int amountEquipModuals
     {
@@ -25,15 +25,20 @@ public class TowerUpgrade : MonoBehaviour
 
     void Awake()
     {
+        myStats = new UpgradeStats();
         if (UpgradeUpdateEvent == null)
             UpgradeUpdateEvent = new MyUpgradeModualEvent();
         if (ChangeWeaponModual == null)
             ChangeWeaponModual = new ModualsEvent();
+        
     }
 
     void Start()
     {
         Moduals = new UpgradeModual[MaxModualAmount];
+        AddModual(new WeaponModual(new Sprite()));
+        AddModual(new UpgradeModual(new Sprite()));
+        AddModual(new UpgradeModual(new Sprite()));
     }
 
    public bool AddModual(UpgradeModual modual)

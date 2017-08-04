@@ -23,7 +23,8 @@ public class SpawnUICirkelLine : MonoBehaviour {
     private GameObject baseStone;
     private Material[] spawnTimers;
     private Queue<RectTransform> passiveDropElements = new Queue<RectTransform>();
-    public Transform Test;
+    [Tooltip("the parrent of all monsterstone to layer UI elements")]
+    public Transform container;
 
     private float getMovementTime { get { return moveTime / Spawn.instance.waveSpeed; } }
     private float getDropTime { get { return UIDropTime / Spawn.instance.waveSpeed; } }
@@ -45,8 +46,8 @@ public class SpawnUICirkelLine : MonoBehaviour {
         for (int i = 0; i < maxVisableStones; i++)
         {
             monsterStoneUI[i] = Instantiate(baseStone);
-            monsterStoneUI[i].transform.parent = Test;
-            monsterStoneUI[i].transform.parent = centerPoint;
+            monsterStoneUI[i].transform.SetParent(container);
+            monsterStoneUI[i].transform.SetParent(centerPoint);
             monsterStoneUI[i].transform.localScale = Vector3.one;
 
 
@@ -217,28 +218,32 @@ public class SpawnUICirkelLine : MonoBehaviour {
 
     private void OnDrawGizmos()
     {
+        canvas = GameObject.FindGameObjectWithTag("ScreenCanvas").GetComponent<RectTransform>();
+
         Gizmos.color = Color.black;
         UnityEditor.Handles.color = Color.black;
 
         circumference = offset * 2 * Mathf.PI / 4;
         elementDistance = (circumference + lineDistance) / (maxVisableStones - 1);
 
-        Gizmos.DrawLine(new Vector3(centerPoint.position.x, centerPoint.position.y - offset, 0), new Vector3(centerPoint.position.x + lineDistance, centerPoint.position.y - offset, 0));
-        UnityEditor.Handles.DrawWireArc(centerPoint.position+new Vector3(lineDistance,0,0), Vector3.back, Vector3.up , 180, offset);
+        Gizmos.DrawLine(canvas.TransformPoint(new Vector3(centerPoint.localPosition.x, centerPoint.localPosition.y - offset, 0)), canvas.TransformPoint( new Vector3(centerPoint.localPosition.x + lineDistance, centerPoint.localPosition.y - offset, 0)));
+        
+        UnityEditor.Handles.DrawWireArc(canvas.TransformPoint(centerPoint.localPosition+new Vector3(lineDistance,0,0)), Vector3.back, Vector3.up , 180, canvas.TransformPoint(new Vector3(0,0,offset)).z);
+
         for(int i = 0; i < maxVisableStones; i++)
         {
             float distence = elementDistance * i;
             if (distence <= lineDistance)
             {
-                Vector3 newPosition = new Vector3(centerPoint.position.x + distence, centerPoint.position.y - offset, 0);
+                Vector3 newPosition = canvas.TransformPoint(new Vector3(centerPoint.localPosition.x + distence, centerPoint.localPosition.y - offset, 0));
                 Gizmos.DrawLine(newPosition+Vector3.up*20, newPosition + Vector3.up * -20);
             }
             else
             {
                 float cirkelProcent = (distence - lineDistance) / circumference;
                 float radians = (270 + 90f * cirkelProcent) * (Mathf.PI / 180);
-                Vector3 newPosition1 = new Vector3(centerPoint.position.x + lineDistance + (offset - 20) * Mathf.Cos(radians), centerPoint.position.y + (offset - 20) * Mathf.Sin(radians), 0);
-                Vector3 newPosition2 = new Vector3(centerPoint.position.x + lineDistance + (offset + 20) * Mathf.Cos(radians), centerPoint.position.y + (offset + 20) * Mathf.Sin(radians), 0);
+                Vector3 newPosition1 = canvas.TransformPoint(new Vector3(centerPoint.localPosition.x + lineDistance + (offset - 20) * Mathf.Cos(radians), centerPoint.localPosition.y + (offset - 20) * Mathf.Sin(radians), 0));
+                Vector3 newPosition2 = canvas.TransformPoint(new Vector3(centerPoint.localPosition.x + lineDistance + (offset + 20) * Mathf.Cos(radians), centerPoint.localPosition.y + (offset + 20) * Mathf.Sin(radians), 0));
                 Gizmos.DrawLine(newPosition1, newPosition2);
             }
         }

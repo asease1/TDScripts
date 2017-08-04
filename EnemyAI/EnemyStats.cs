@@ -53,15 +53,19 @@ public class EnemyStats : MonoBehaviour {
 
     void Start()
     {
-        healthBarRend = healthBar.GetComponent<Renderer>();
-        healthBarRend.material.SetFloat("_Health", Health / HealthMax);
-        StartCoroutine("HpRegen");
+        if (healthBar != null)
+        {
+            healthBarRend = healthBar.GetComponent<Renderer>();
+            healthBarRend.material.SetFloat("_Health", Health / HealthMax);
+            StartCoroutine("HpRegen");
+        }
         
     }
 
     void Update()
     {
-        healthBar.transform.LookAt(Camera.main.transform);        
+        if(healthBar != null)
+            healthBar.transform.LookAt(Camera.main.transform);        
     }
 
     private void DestroyThisEnemy()

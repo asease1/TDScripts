@@ -7,7 +7,9 @@ public class CameraControl : MonoBehaviour
     public float cameraMovementSpeed, scrollSpeed;
     private float cameraCurrentPos;
     private int CurrentRotationPos;
-    public float minHeight, maxHeight, minDistance, maxDistance, cameraSlowDown, rotationSpeed, bufferZone;
+    public float minHeight, maxHeight, minDistance, maxDistance, cameraSlowDown, rotationSpeed;
+    [Tooltip("Less space then the grid size")]
+    public float bufferZone;
     private float scrollAmount, currentScrollSpeed, currentHeight = 0;
     private float minX, maxX, minZ, maxZ;
     public bool Test;

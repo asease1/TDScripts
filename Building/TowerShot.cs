@@ -3,15 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TowerShot : MonoBehaviour {
-    public enum AttackType { Homing, Line, Artillery}
 
-    public AttackType attackType;
+    public BulletScript.movementPaten attackType;
     private GetTargetTower GetTargets;
     public GetTargetTower.TargetType targetType;
     public float getTargetDelay;
     private EnemyStats currentTarget;
     public GameObject gun, baseGun;
-    public GameObject Bullet;
     private List<BaseBullet> Bullets = new List<BaseBullet>();
     private Queue<BaseBullet> InActive = new Queue<BaseBullet>();
     private UpgradeStats myStats;
@@ -25,53 +23,37 @@ public class TowerShot : MonoBehaviour {
         myStats = GetComponent<TowerUpgrade>().myStats;
         GetComponent<TowerUpgrade>().ChangeWeaponModual.AddListener(UpdateWeaponModual);
         StartCoroutine("GetTarget", getTargetDelay);
-        attackType = AttackType.Homing;
+        attackType = BulletScript.movementPaten.line;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (currentWeaponModual == null)
-            return;
-
+       // if (currentWeaponModual == null)
+            //return;
+        //Debug.Log(currentTarget);
         if (currentTarget != null)
         {
             gun.transform.LookAt(currentTarget.transform);
+            
             Vector3 rotation = gun.transform.localEulerAngles;
-            gun.transform.localEulerAngles = new Vector3(-rotation.x, rotation.y-180, 0);
-            baseGun.transform.localEulerAngles = new Vector3(0, rotation.y, 0);
+            //Code to make blender files work
+            //gun.transform.localEulerAngles = new Vector3(-rotation.x, rotation.y-180, 0);
+            if (baseGun != null)
+                baseGun.transform.localEulerAngles = new Vector3(0, rotation.y, 0);
         }
-
+        
         if(Time.timeSinceLevelLoad > lastRun + myStats.attackRate)
-        {
-            lastRun = lastRun + myStats.attackRate;
+        {           
             if (currentTarget != null)
             {
-                if (InActive.Count > 0)
+                lastRun = lastRun + myStats.attackRate;
+                switch (attackType)
                 {
-                    BaseBullet bulletTemp;
-                    bulletTemp = InActive.Dequeue();
-                    bulletTemp.target = currentTarget.transform;
-                    bulletTemp.gameObject.SetActive(true);
-                    bulletTemp.transform.position = gun.transform.position;
-                    bulletTemp.transform.rotation = Quaternion.Euler(gun.transform.eulerAngles.x - 180, gun.transform.eulerAngles.y, gun.transform.eulerAngles.z);
+                    case BulletScript.movementPaten.line:
+                        BulletScript.InstanceBullet(gun.transform, 20, 0);
+                        break;
                 }
-                else
-                {
-                    GameObject bulletTemp = Instantiate(Bullet, gun.transform.position, Quaternion.Euler(gun.transform.eulerAngles.x - 180, gun.transform.eulerAngles.y, gun.transform.eulerAngles.z)) as GameObject;
-                    switch (attackType)
-                    {
-                        case AttackType.Homing:
-                            Homing temp = bulletTemp.AddComponent<Homing>();
-                            temp.SetBullet(myStats, 10, currentTarget.transform, BaseBullet.damageTypes.light, this);
-                            Bullets.Add(temp);
-                            Debug.Log("test");
-                            break;
-                        case AttackType.Artillery:
-                        case AttackType.Line:
-                            bulletTemp.AddComponent<Line>().SetBaseBullet(myStats, currentTarget.transform, BaseBullet.damageTypes.light, this);
-                            break;
-                    }
-                }
+                
             }
         }
     }
@@ -153,6 +135,7 @@ public class TowerShot : MonoBehaviour {
         while (true)
         {
             currentTarget = GetTargets.GetTarget(targetType);
+           
             yield return new WaitForSeconds(delay);
         }
     }
