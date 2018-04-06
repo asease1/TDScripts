@@ -44,7 +44,14 @@ public class TowerWeaponModual : MonoBehaviour, ITowerModual {
             this.weaponSlot = weaponSlot;
             Destroy(caller);
             transform.parent.GetComponentInChildren<TurretScript>().updateStats();
+            switch (weaponSlot.damageType)
+            {
+                case Constants.DamageType.Magic:
+                    testWeaponPrefab = Resources.Load("")
+                    break;
+            }
         }
+        switch(weaponSlot)
 
         GameObject weapon = Instantiate(testWeaponPrefab);
         weapon.transform.SetParent(transform);
