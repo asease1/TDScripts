@@ -81,7 +81,6 @@ public class MonsterStone {
                 case MonsterType.Slime:
                     return 10;
                 default:
-                    Debug.Log("Unknown Monster type found");
                     return 5;
 
             }    

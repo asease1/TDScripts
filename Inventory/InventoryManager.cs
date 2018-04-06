@@ -14,6 +14,8 @@ public class InventoryManager : MonoBehaviour {
     public Sprite UIBackground;
     public Sprite ModualSlotSprite;
 
+    public Sprite test;
+
     private Image BackGroundImage;
     private RectTransform modualParrent;
     public List<UpgradeModual> inventory = new List<UpgradeModual>();
@@ -38,6 +40,22 @@ public class InventoryManager : MonoBehaviour {
         SetupInventoryBackground();
         SetupInventoryModuelSlots();
         SetupInventoryModuels();
+
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
+        AddInventory(new WeaponModual(test));
     }
 
     public void AddInventory(UpgradeModual item)

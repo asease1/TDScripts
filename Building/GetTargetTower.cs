@@ -21,14 +21,14 @@ public class GetTargetTower : MonoBehaviour {
     }
     // Use this for initialization
     void Awake() {
-        collider = GetComponent<CapsuleCollider>();
-        towerShot = GetComponent<TowerShot>();
-        
-    }
+        collider = gameObject.AddComponent<CapsuleCollider>();
+        Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
+        rigidbody.useGravity = false;
+        rigidbody.isKinematic = true;
+        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        collider.isTrigger = true;
 
-    void Start()
-    {
-        GetComponent<TowerUpgrade>().UpgradeUpdateEvent.AddListener(UpdateRange);
     }
 
     public void KillTarget(EnemyStats target)
@@ -38,15 +38,21 @@ public class GetTargetTower : MonoBehaviour {
 
     public void UpdateRange(UpgradeStats stat)
     {
-        Debug.Log(stat.range);
         collider.height = stat.range * 3;
         collider.radius = stat.range * 2;
+    }
+
+    public void UpdateRange(float stat)
+    {
+        collider.height = stat * 3;
+        collider.radius = stat * 2;
     }
 
     void OnTriggerEnter(Collider hit)
     {
         if (hit.gameObject.tag == "Enemy")
         {
+            Debug.Log("Enemy");
             EnemyStats temp = hit.gameObject.GetComponent<EnemyStats>();
             temp.towerTargets.Add(towerShot);
             targets.Add(temp);
