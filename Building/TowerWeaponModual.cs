@@ -12,6 +12,9 @@ public class TowerWeaponModual : MonoBehaviour, ITowerModual {
     private static GameObject TestWeaponPrefab;
     public ModualWeaponSlot weaponSlot;
 
+    private GameObject instateHead;
+    private GameObject modualHead;
+
     GameObject testWeaponPrefab
     {
         get
@@ -44,11 +47,12 @@ public class TowerWeaponModual : MonoBehaviour, ITowerModual {
             this.weaponSlot = weaponSlot;
             Destroy(caller);
             transform.parent.GetComponentInChildren<TurretScript>().updateStats();
+            modualHead = ((GameObject)Resources.Load("Prefabs/modules/" + weaponSlot.modualModel));
+            Destroy(instateHead);
+            instateHead = Instantiate(testWeaponPrefab);
+            instateHead.transform.SetParent(transform);
+            instateHead.transform.position = modualSlot.position;
         }
-
-        GameObject weapon = Instantiate(testWeaponPrefab);
-        weapon.transform.SetParent(transform);
-        weapon.transform.position = modualSlot.position;
     }
 
     // Use this for initialization

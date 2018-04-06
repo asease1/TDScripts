@@ -10,16 +10,10 @@ public class TowerUpgradeModual : MonoBehaviour, ITowerModual
     public Transform modualSlot;
     private ITowerModual[] group;
 
-    private static GameObject TestWeaponPrefab;
-    GameObject testWeaponPrefab
-    {
-        get
-        {
-            if (TestWeaponPrefab == null)
-                TestWeaponPrefab = (GameObject)Resources.Load("Prefab/Upgrade", typeof(GameObject));
-            return TestWeaponPrefab;
-        }
-    }
+    private GameObject modualHead;
+    private GameObject instateHead;
+    [HideInInspector]
+    public ModualUpgradeSlot upgradeSlot;
 
     public void MouseHoverEnter()
     {
@@ -37,9 +31,19 @@ public class TowerUpgradeModual : MonoBehaviour, ITowerModual
 
     public void SetModual(Object caller)
     {
-        GameObject weapon = Instantiate(testWeaponPrefab);
-        weapon.transform.SetParent(transform);
-        weapon.transform.position = modualSlot.position;
+        ModualUpgradeSlot upgradeSlot = ((GameObject)caller).GetComponent<ModualUpgradeSlot>();
+        if (upgradeSlot != null)
+        {
+            this.upgradeSlot = upgradeSlot;
+            Destroy(caller);
+            transform.parent.GetComponentInChildren<TurretScript>().updateStats();
+            modualHead = ((GameObject)Resources.Load("Prefabs/modules/" + upgradeSlot.modualModel));
+            Destroy(instateHead);
+            instateHead = Instantiate(modualHead);
+            instateHead.transform.SetParent(transform);
+            instateHead.transform.position = modualSlot.position;
+        }
+        
     }
 
     // Use this for initialization

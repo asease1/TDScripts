@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ModualWeaponSlot : MonoBehaviour {
+    public string modualModel;
     public Constants.DamageType damageType;
     public float range = 10;
     public float attackSpeed = 1;

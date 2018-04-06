@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class ModualUpgradeSlot : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public string modualModel;
+
+    public float range = 10;
+    public float attackSpeed = 1;
+    public float damage = 10;
 }
