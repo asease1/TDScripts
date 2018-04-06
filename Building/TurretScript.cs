@@ -15,6 +15,8 @@ public class TurretScript : MonoBehaviour {
     private float range;
     private float attackSpeed = 0.001f;
 
+    private Transform barrel, mount;
+
 
 	// Use this for initialization
 	void Start () {
@@ -41,7 +43,7 @@ public class TurretScript : MonoBehaviour {
             switch (damageType)
             {
                 case Constants.DamageType.Magic:
-                    weaponModual = Instantiate((GameObject)Resources.Load("Prefab/Weapon", typeof(GameObject)));
+                    weaponModual = Instantiate((GameObject)Resources.Load("Prefabs/turrets/turret_cannon", typeof(GameObject)));
                     weaponModual.transform.parent = modualSlot.transform;
                     weaponModual.transform.localPosition = Vector3.zero;
                     break;
@@ -56,6 +58,9 @@ public class TurretScript : MonoBehaviour {
                 case Constants.DamageType.mix3:
                     break;
             }
+            barrel = weaponModual.transform.FindChild("turret_barrel");
+            mount = weaponModual.transform.FindChild("turret_mount");
+
             StopCoroutine(Attack());
             StartCoroutine(Attack());
         }
@@ -71,7 +76,9 @@ public class TurretScript : MonoBehaviour {
             if (enemy == null)
                 continue;
             Debug.Log("Torks");
-            modualSlot.transform.LookAt(enemy.transform);
+            barrel.LookAt(enemy.transform);
+
+            mount.localEulerAngles = new Vector3(0, barrel.eulerAngles.y, 0);
             print("WaitAndPrint " + Time.time);
         }
     }
