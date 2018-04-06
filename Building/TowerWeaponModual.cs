@@ -49,7 +49,7 @@ public class TowerWeaponModual : MonoBehaviour, ITowerModual {
             transform.parent.GetComponentInChildren<TurretScript>().updateStats();
             modualHead = ((GameObject)Resources.Load("Prefabs/modules/" + weaponSlot.modualModel));
             Destroy(instateHead);
-            instateHead = Instantiate(testWeaponPrefab);
+            instateHead = Instantiate(modualHead);
             instateHead.transform.SetParent(transform);
             instateHead.transform.position = modualSlot.position;
         }
