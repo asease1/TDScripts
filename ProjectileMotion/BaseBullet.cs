@@ -8,14 +8,12 @@ public class BaseBullet : MonoBehaviour {
     public damageTypes myDamageType;
     public UpgradeStats stats;
     public Transform target;
-    protected TowerShot spawnTower;
 
-    public void SetBaseBullet(UpgradeStats stats, Transform target, damageTypes bulletDamageType, TowerShot motherTower)
+    public void SetBaseBullet(UpgradeStats stats, Transform target, damageTypes bulletDamageType)
     {
         this.stats = stats;
         this.target = target;
         myDamageType = bulletDamageType;
-        spawnTower = motherTower;
     }
 
     void OnTriggerEnter(Collider hit)
@@ -27,7 +25,6 @@ public class BaseBullet : MonoBehaviour {
                 EnemyStats temp = hit.GetComponent<EnemyStats>();
                 temp.Attacked(stats, myDamageType);
             }
-            spawnTower.SetInActiveBullet(this);
         }
     }
 

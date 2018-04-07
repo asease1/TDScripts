@@ -17,6 +17,7 @@ public class TurretScript : MonoBehaviour {
 
     private Transform barrel, mount;
 
+    private GameObject bulletModel;
 
 	// Use this for initialization
 	void Start () {
@@ -58,6 +59,7 @@ public class TurretScript : MonoBehaviour {
                 case Constants.DamageType.mix3:
                     break;
             }
+            bulletModel = ((GameObject)Resources.Load("Prefabs/projectiles/" + elm.bulletModual));
             barrel = weaponModual.transform.FindChild("turret_barrel");
             mount = weaponModual.transform.FindChild("turret_mount");
 
@@ -75,11 +77,10 @@ public class TurretScript : MonoBehaviour {
             EnemyStats enemy = getTarget.GetTarget(GetTargetTower.TargetType.Closed);
             if (enemy == null)
                 continue;
-            Debug.Log("Torks");
             barrel.LookAt(enemy.transform);
 
             mount.localEulerAngles = new Vector3(0, barrel.eulerAngles.y, 0);
-            print("WaitAndPrint " + Time.time);
+            BulletScript.InstanceBullet(barrel, 10, bulletModel);
         }
     }
 }

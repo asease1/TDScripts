@@ -8,7 +8,6 @@ public class GetTargetTower : MonoBehaviour {
 
     private CapsuleCollider collider;
     private List<EnemyStats> targets = new List<EnemyStats>();
-    private TowerShot towerShot;
 
     public EnemyStats GetTarget(TargetType type)
     {
@@ -52,9 +51,7 @@ public class GetTargetTower : MonoBehaviour {
     {
         if (hit.gameObject.tag == "Enemy")
         {
-            Debug.Log("Enemy");
             EnemyStats temp = hit.gameObject.GetComponent<EnemyStats>();
-            temp.towerTargets.Add(towerShot);
             targets.Add(temp);
         }
     }
@@ -65,7 +62,6 @@ public class GetTargetTower : MonoBehaviour {
         {
             EnemyStats temp = hit.gameObject.GetComponent<EnemyStats>();
             targets.Remove(temp);
-            temp.towerTargets.Remove(towerShot);
         }
     }
 }

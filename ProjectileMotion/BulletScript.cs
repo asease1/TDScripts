@@ -5,7 +5,7 @@ using UnityEngine;
 public class BulletScript : MonoBehaviour {
     public enum movementPaten { line, homing, artillery}
 
-    private static Queue<GameObject> inActiveBullets;
+    private static Dictionary<string,Queue<GameObject>> inActiveBullets;
     private static GameObject[] bulletPrefabs;
     private movementPaten movementPatern;
     private BaseBullet.damageTypes damageType;
@@ -15,12 +15,13 @@ public class BulletScript : MonoBehaviour {
     public UpgradeStats setStats { set { stats = value; } }
     public movementPaten setMovementPatern { set { movementPatern = value; } }
 
+    private string prefabName;
 
 
     public static void InstanceBullet(Transform spawnTransform, float speed, GameObject prefab, movementPaten movement = movementPaten.line)
     {
         if (inActiveBullets == null)
-            inActiveBullets = new Queue<GameObject>();
+            inActiveBullets = new Dictionary<string, Queue<GameObject>>();
 
         BulletScript bulletStats;
 
@@ -30,8 +31,12 @@ public class BulletScript : MonoBehaviour {
             bulletStats = bullet.AddComponent<BulletScript>();
         }
         else
-            bulletStats = inActiveBullets.Dequeue().GetComponent<BulletScript>();
-        
+            bulletStats = inActiveBullets[prefab.ToString()].Dequeue().GetComponent<BulletScript>();
+        UpgradeStats stat = new UpgradeStats();
+        stat.damage = 5;
+        bulletStats.prefabName = prefab.ToString();
+        bulletStats.setStats = stat;
+        bulletStats.damageType = BaseBullet.damageTypes.medium;
         bulletStats.setMovementPatern = movementPaten.line;
         bulletStats.speed = speed;
 
@@ -55,14 +60,14 @@ public class BulletScript : MonoBehaviour {
 
     void OnTriggerEnter(Collider hit)
     {
-        if (hit.gameObject.layer != LayerMask.NameToLayer("IgnoreRaycast"))
+        if (hit.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast"))
         {
             if (hit.gameObject.tag == "Enemy")
             {
                 EnemyStats temp = hit.GetComponent<EnemyStats>();
                 temp.Attacked(stats, damageType);
             }
-            inActiveBullets.Enqueue(gameObject);
+            inActiveBullets[prefabName].Enqueue(gameObject);
             gameObject.active = false;
         }
     }

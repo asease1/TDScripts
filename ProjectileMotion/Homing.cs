@@ -5,10 +5,10 @@ public class Homing : BaseBullet
 {
     public float rotationspeed;
 
-    public void SetBullet(UpgradeStats stats, float rotaionspeed, Transform target, damageTypes myDamageType, TowerShot spawnTower)
+    public void SetBullet(UpgradeStats stats, float rotaionspeed, Transform target, damageTypes myDamageType)
     {
         this.rotationspeed = rotaionspeed;
-        SetBaseBullet(stats , target, myDamageType, spawnTower);
+        SetBaseBullet(stats , target, myDamageType);
     }
 
 

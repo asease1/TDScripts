@@ -8,7 +8,6 @@ public class MyFloatEvent : UnityEngine.Events.UnityEvent<float> { }
 public class EnemyStats : MonoBehaviour {
 
     public enum ArmorTypes { light, medium, heavy}
-    public List<TowerShot> towerTargets = new List<TowerShot>();
     public ArmorTypes myArmorType;
     public GameObject healthBar;
     public MyFloatEvent NewSlowEvent;
@@ -26,7 +25,8 @@ public class EnemyStats : MonoBehaviour {
             healthBarRend.material.SetFloat("_Health", Health / HealthMax);
             if (Health <= 0)
             {
-                DestroyThisEnemy();
+                //TODO do something
+                //DestroyThisEnemy();
             }
         }
     }
@@ -66,14 +66,6 @@ public class EnemyStats : MonoBehaviour {
     {
         if(healthBar != null)
             healthBar.transform.LookAt(Camera.main.transform);        
-    }
-
-    private void DestroyThisEnemy()
-    {   
-        for(int i = 0; i < towerTargets.Count; i++) {
-            towerTargets[i].KillTarget(this);
-        }
-        Destroy(gameObject);
     }
 
     public void Attacked(UpgradeStats stats, BaseBullet.damageTypes damageType)
