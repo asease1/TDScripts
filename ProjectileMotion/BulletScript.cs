@@ -6,7 +6,6 @@ public class BulletScript : MonoBehaviour {
     public enum movementPaten { line, homing, artillery}
 
     private static Queue<GameObject> inActiveBullets;
-    private const float roationSpeed = 20;
     private static GameObject[] bulletPrefabs;
     private movementPaten movementPatern;
     private BaseBullet.damageTypes damageType;
@@ -18,27 +17,17 @@ public class BulletScript : MonoBehaviour {
 
 
 
-    private static GameObject getBulletPrefab(int index)
-    {
-        if(bulletPrefabs == null)
-        {
-            bulletPrefabs = new GameObject[1];
-            bulletPrefabs[0] = (GameObject)Resources.Load("Prefab/Bullets/Bullet1", typeof(GameObject));
-        }
-        return bulletPrefabs[index];
-    }
-
-    public static void InstanceBullet(Transform spawnTransform, float speed, int prefab)
+    public static void InstanceBullet(Transform spawnTransform, float speed, GameObject prefab, movementPaten movement = movementPaten.line)
     {
         if (inActiveBullets == null)
             inActiveBullets = new Queue<GameObject>();
 
         BulletScript bulletStats;
-        Debug.Log(inActiveBullets.Count);
+
         if (inActiveBullets.Count == 0)
         {
-            GameObject bullet = Instantiate(getBulletPrefab(prefab), spawnTransform.position, spawnTransform.rotation);
-            bulletStats = bullet.GetComponent<BulletScript>();
+            GameObject bullet = Instantiate(prefab, spawnTransform.position, spawnTransform.rotation);
+            bulletStats = bullet.AddComponent<BulletScript>();
         }
         else
             bulletStats = inActiveBullets.Dequeue().GetComponent<BulletScript>();
@@ -47,11 +36,6 @@ public class BulletScript : MonoBehaviour {
         bulletStats.speed = speed;
 
     }
-
-	// Use this for initialization
-	void Start () {
-		
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -60,16 +44,18 @@ public class BulletScript : MonoBehaviour {
             case movementPaten.line:
                 transform.position += transform.forward * speed * Time.deltaTime;
                 break;
+            case movementPaten.homing:
+            case movementPaten.artillery:
             default:
                 Debug.Log("Something wrong this bullet is going to wrap");
                 break;
         }
-		
-	}
+
+    }
 
     void OnTriggerEnter(Collider hit)
     {
-        if (hit.gameObject.layer != LayerMask.NameToLayer("RangeLayer"))
+        if (hit.gameObject.layer != LayerMask.NameToLayer("IgnoreRaycast"))
         {
             if (hit.gameObject.tag == "Enemy")
             {
